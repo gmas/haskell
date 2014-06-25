@@ -8,14 +8,20 @@ toDigits nr = [ fromIntegral (digitToInt c) | c <- show nr,
 toDigitsRev :: Integer -> [Integer]
 toDigitsRev nr = reverse $ toDigits nr
 
-doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther [] = []
-doubleEveryOther [x] = [x]
-doubleEveryOther (x:xs) = x : (2 * head xs) : doubleEveryOther (tail xs)
+doubleEveryOther_ :: [Integer] -> [Integer]
+doubleEveryOther_  [] = []
+doubleEveryOther_  [x] = [x]
+doubleEveryOther_  (x:y:xs) = x : (2 * y) : doubleEveryOther_ xs
+doubleEveryOther xs = reverse $ doubleEveryOther_  $ reverse xs
 
-sumDigits :: (Num a) => [a] -> a
+
+sumD :: [Integer] -> Integer
+sumD [] = 0
+sumD (x:xs) = x + sumD xs
+
+sumDigits :: [Integer] -> Integer
 sumDigits [] = 0
-sumDigits (x:xs) = x + sumDigits xs
+sumDigits (x:xs) = sumD (toDigits x) + sumDigits xs
 
 validate :: Integer -> Bool
 validate nr  = mod (sumDigits $ doubleEveryOther $ toDigits nr ) 10 == 0
